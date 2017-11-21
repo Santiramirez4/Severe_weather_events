@@ -81,13 +81,13 @@ BGN_DATE represent a Date and is being shown as "Factor". TO convert to type: "D
 ```r
 #Make a copy of data to avoid reading again the file
 Rawdata2 <- Rawdata
-Rawdata2$BGN_DATE <- as.Date(Rawdata2$BGN_DATE, "%Y/%m/%d")
+Rawdata2$BGN_DATE <- as.Date(Rawdata2$BGN_DATE, "%m/%d/%Y")
 #validate if type of data for "Date" has changed
-str(Rawdata$BGN_DATE)
+str(Rawdata2$BGN_DATE)
 ```
 
 ```
-##  Factor w/ 16335 levels "1/1/1966 0:00:00",..: 6523 6523 4242 11116 2224 2224 2260 383 3980 3980 ...
+##  Date[1:902297], format: "1950-04-18" "1950-04-18" "1951-02-20" "1951-06-08" "1951-11-15" ...
 ```
 
 One of the Questions is to know which Event Type has been more harmful with respect to

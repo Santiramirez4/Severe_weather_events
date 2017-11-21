@@ -188,10 +188,10 @@ str(Rawdata)</code></pre>
 <p>BGN_DATE represent a Date and is being shown as “Factor”. TO convert to type: “Date”</p>
 <pre class="r"><code>#Make a copy of data to avoid reading again the file
 Rawdata2 &lt;- Rawdata
-Rawdata2$BGN_DATE &lt;- as.Date(Rawdata2$BGN_DATE, &quot;%Y/%m/%d&quot;)
+Rawdata2$BGN_DATE &lt;- as.Date(Rawdata2$BGN_DATE, &quot;%m/%d/%Y&quot;)
 #validate if type of data for &quot;Date&quot; has changed
-str(Rawdata$BGN_DATE)</code></pre>
-<pre><code>##  Factor w/ 16335 levels &quot;1/1/1966 0:00:00&quot;,..: 6523 6523 4242 11116 2224 2224 2260 383 3980 3980 ...</code></pre>
+str(Rawdata2$BGN_DATE)</code></pre>
+<pre><code>##  Date[1:902297], format: &quot;1950-04-18&quot; &quot;1950-04-18&quot; &quot;1951-02-20&quot; &quot;1951-06-08&quot; &quot;1951-11-15&quot; ...</code></pre>
 <p>One of the Questions is to know which Event Type has been more harmful with respect to population.</p>
 <p>The first approach is to validate wich Event Type has occurred more times</p>
 <pre class="r"><code>EventTypeSummary &lt;- table(Rawdata2$EVTYPE)

@@ -51,9 +51,9 @@ BGN_DATE represent a Date and is being shown as "Factor". TO convert to type: "D
 ``` {r changetodate}
 #Make a copy of data to avoid reading again the file
 Rawdata2 <- Rawdata
-Rawdata2$BGN_DATE <- as.Date(Rawdata2$BGN_DATE, "%Y/%m/%d")
+Rawdata2$BGN_DATE <- as.Date(Rawdata2$BGN_DATE, "%m/%d/%Y")
 #validate if type of data for "Date" has changed
-str(Rawdata$BGN_DATE)
+str(Rawdata2$BGN_DATE)
 
 ```
 
