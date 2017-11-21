@@ -1,0 +1,70 @@
+---
+title: "NOAA Storm Database - Analysis: Severe weather events"
+author: "Santiago R"
+date: "21 November 2017"
+output:
+        html_document:
+                keep_md: true
+---
+
+```{r setup, include=FALSE}
+rm(list = ls()) #Delete existing data in global environment
+library(knitr)
+library(lattice)
+library(ggplot2)
+library(dplyr)
+library(anytime)
+opts_chunk$set(echo = TRUE, cache = TRUE) ## Always show answers and avoid repeating unnecessary calculations
+```
+
+# Questions:
+
+The data Analysis will address the following questions:
+
+
+- Across the United States, which types of events (as indicated in the EVTYPE variable) are
+most harmful with respect to population health?
+
+
+- Across the United States, which types of events have the greatest economic consequences?
+
+# Synopsis
+
+Add here the Synopsis! **Pending**
+
+# Data processing
+
+## Reading the Data
+
+``` {r readingData}
+# for Reading Files *ZIP
+fileUrl <- "https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2"
+download.file(fileUrl, "dataset.zip")
+Rawdata <- read.csv("dataset.zip", header = TRUE, sep = ",", check.names = TRUE)
+
+#Check data
+str(Rawdata)
+``` 
+
+BGN_DATE represent a Date and is being shown as "Factor". TO convert to type: "Date"
+
+``` {r changetodate}
+#Make a copy of data to avoid reading again the file
+Rawdata2 <- Rawdata
+Rawdata2$BGN_DATE <- as.Date(Rawdata2$BGN_DATE, "%Y/%m/%d")
+#validate if type of data for "Date" has changed
+str(Rawdata$BGN_DATE)
+
+```
+
+One of the Questions is to know which Event Type has been more harmful with respect to
+population. 
+
+The first approach is to validate wich Event Type has occurred more times
+
+```{r MostrepeatedEvent}
+EventTypeSummary <- table(Rawdata2$EVTYPE)
+EventTypeSummary <- data.frame(EventTypeSummary)
+EventTypeSummary <- arrange(EventTypeSummary, desc(Freq))
+head(EventTypeSummary, 15)
+``` 
