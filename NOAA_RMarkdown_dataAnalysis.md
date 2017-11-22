@@ -100,24 +100,92 @@ The first approach is to validate wich Event Type has occurred more times
 EventTypeSummary <- table(Rawdata2$EVTYPE)
 EventTypeSummary <- data.frame(EventTypeSummary)
 EventTypeSummary <- arrange(EventTypeSummary, desc(Freq))
-head(EventTypeSummary, 15)
+head(EventTypeSummary, 5)
 ```
 
 ```
-##                  Var1   Freq
-## 1                HAIL 288661
-## 2           TSTM WIND 219940
-## 3   THUNDERSTORM WIND  82563
-## 4             TORNADO  60652
-## 5         FLASH FLOOD  54277
-## 6               FLOOD  25326
-## 7  THUNDERSTORM WINDS  20843
-## 8           HIGH WIND  20212
-## 9           LIGHTNING  15754
-## 10         HEAVY SNOW  15708
-## 11         HEAVY RAIN  11723
-## 12       WINTER STORM  11433
-## 13     WINTER WEATHER   7026
-## 14       FUNNEL CLOUD   6839
-## 15   MARINE TSTM WIND   6175
+##                Var1   Freq
+## 1              HAIL 288661
+## 2         TSTM WIND 219940
+## 3 THUNDERSTORM WIND  82563
+## 4           TORNADO  60652
+## 5       FLASH FLOOD  54277
 ```
+From this table, we can think that HAIL is the event that happens
+the most in USA. Nevertheless, it does not guarantee that it is the most harmful for the 
+population.
+
+To validate the Harmfulness, the "Fatalities" and "Injuries" caused by the events will be
+analyzed.
+
+
+```r
+FatalitiesInjuries <- subset(Rawdata2, select =  c(STATE, BGN_DATE, EVTYPE, FATALITIES, INJURIES))
+EvFatalities <- aggregate(FatalitiesInjuries$FATALITIES, by = list(FatalitiesInjuries$EVTYPE), FUN = sum)
+EvInjuries <- aggregate(FatalitiesInjuries$INJURIES, by = list(FatalitiesInjuries$EVTYPE), FUN = sum)
+#Order the Data from Higher to lower to see the events with more fatal and injure events:
+
+EvFatalities <- arrange(EvFatalities, desc(x))
+EvInjuries <- arrange(EvInjuries, desc(x))
+HarmfulEvents <- merge(EvFatalities, EvInjuries, by = "Group.1", all = TRUE)
+HarmfulEvents <- arrange(HarmfulEvents, desc(x.x))
+names <- c("EVTYPE", "FATALITIES", "INJURIES")
+colnames(HarmfulEvents) <- names
+head(HarmfulEvents, 5)
+```
+
+```
+##           EVTYPE FATALITIES INJURIES
+## 1        TORNADO       5633    91346
+## 2 EXCESSIVE HEAT       1903     6525
+## 3    FLASH FLOOD        978     1777
+## 4           HEAT        937     2100
+## 5      LIGHTNING        816     5230
+```
+
+Here, one can see that **TORNADO** and **EXCESSIVE HEAT** have the higher values in Fatalities.
+Comparing with the frequency of the events (Table shown above "EventTypeSummary"), the 
+Frequency of the events is not directly related with the Harmfulness. 
+
+Considering that the Fatal cases are worst as the Injuries, but without taking out consideration
+the injuries, a Weighted calculation is made, where a weight of "5" is given to "Fatality"
+and a Weight of "1" to "Injury"
+
+
+```r
+HarmfulEvents2 <- HarmfulEvents
+HarmfulEvents2 <- HarmfulEvents2 %>% mutate(WeightedValue = FATALITIES*5 + INJURIES)
+HarmfulEvents2 <- arrange(HarmfulEvents2, desc(WeightedValue))
+head(HarmfulEvents2, 5)
+```
+
+```
+##           EVTYPE FATALITIES INJURIES WeightedValue
+## 1        TORNADO       5633    91346        119511
+## 2 EXCESSIVE HEAT       1903     6525         16040
+## 3      TSTM WIND        504     6957          9477
+## 4      LIGHTNING        816     5230          9310
+## 5          FLOOD        470     6789          9139
+```
+With this conisderation, the most harmful event is the **TORNADO**, followed by the **EXCESIVE HEAT**
+To be clear with the "Weighted value", this result might vary according to the weight given
+to the "FATALITY". To validate its impact, another calculation with a higher weight is made to see
+if the top 3 events vary:
+
+
+```r
+HarmfulEvents2 <- HarmfulEvents
+HarmfulEvents2 <- HarmfulEvents2 %>% mutate(WeightedValue = FATALITIES*10 + INJURIES)
+HarmfulEvents2 <- arrange(HarmfulEvents2, desc(WeightedValue))
+head(HarmfulEvents2, 3)
+```
+
+```
+##           EVTYPE FATALITIES INJURIES WeightedValue
+## 1        TORNADO       5633    91346        147676
+## 2 EXCESSIVE HEAT       1903     6525         25555
+## 3      LIGHTNING        816     5230         13390
+```
+
+### Answer Question 1
+* It is clear that **TORNADO** and **EXCESIVE HEAT** are the 2 most harmful events in the USA.

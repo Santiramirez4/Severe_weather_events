@@ -197,23 +197,60 @@ str(Rawdata2$BGN_DATE)</code></pre>
 <pre class="r"><code>EventTypeSummary &lt;- table(Rawdata2$EVTYPE)
 EventTypeSummary &lt;- data.frame(EventTypeSummary)
 EventTypeSummary &lt;- arrange(EventTypeSummary, desc(Freq))
-head(EventTypeSummary, 15)</code></pre>
-<pre><code>##                  Var1   Freq
-## 1                HAIL 288661
-## 2           TSTM WIND 219940
-## 3   THUNDERSTORM WIND  82563
-## 4             TORNADO  60652
-## 5         FLASH FLOOD  54277
-## 6               FLOOD  25326
-## 7  THUNDERSTORM WINDS  20843
-## 8           HIGH WIND  20212
-## 9           LIGHTNING  15754
-## 10         HEAVY SNOW  15708
-## 11         HEAVY RAIN  11723
-## 12       WINTER STORM  11433
-## 13     WINTER WEATHER   7026
-## 14       FUNNEL CLOUD   6839
-## 15   MARINE TSTM WIND   6175</code></pre>
+head(EventTypeSummary, 5)</code></pre>
+<pre><code>##                Var1   Freq
+## 1              HAIL 288661
+## 2         TSTM WIND 219940
+## 3 THUNDERSTORM WIND  82563
+## 4           TORNADO  60652
+## 5       FLASH FLOOD  54277</code></pre>
+<p>From this table, we can think that HAIL is the event that happens the most in USA. Nevertheless, it does not guarantee that it is the most harmful for the population.</p>
+<p>To validate the Harmfulness, the “Fatalities” and “Injuries” caused by the events will be analyzed.</p>
+<pre class="r"><code>FatalitiesInjuries &lt;- subset(Rawdata2, select =  c(STATE, BGN_DATE, EVTYPE, FATALITIES, INJURIES))
+EvFatalities &lt;- aggregate(FatalitiesInjuries$FATALITIES, by = list(FatalitiesInjuries$EVTYPE), FUN = sum)
+EvInjuries &lt;- aggregate(FatalitiesInjuries$INJURIES, by = list(FatalitiesInjuries$EVTYPE), FUN = sum)
+#Order the Data from Higher to lower to see the events with more fatal and injure events:
+
+EvFatalities &lt;- arrange(EvFatalities, desc(x))
+EvInjuries &lt;- arrange(EvInjuries, desc(x))
+HarmfulEvents &lt;- merge(EvFatalities, EvInjuries, by = &quot;Group.1&quot;, all = TRUE)
+HarmfulEvents &lt;- arrange(HarmfulEvents, desc(x.x))
+names &lt;- c(&quot;EVTYPE&quot;, &quot;FATALITIES&quot;, &quot;INJURIES&quot;)
+colnames(HarmfulEvents) &lt;- names
+head(HarmfulEvents, 5)</code></pre>
+<pre><code>##           EVTYPE FATALITIES INJURIES
+## 1        TORNADO       5633    91346
+## 2 EXCESSIVE HEAT       1903     6525
+## 3    FLASH FLOOD        978     1777
+## 4           HEAT        937     2100
+## 5      LIGHTNING        816     5230</code></pre>
+<p>Here, one can see that <strong>TORNADO</strong> and <strong>EXCESSIVE HEAT</strong> have the higher values in Fatalities. Comparing with the frequency of the events (Table shown above “EventTypeSummary”), the Frequency of the events is not directly related with the Harmfulness.</p>
+<p>Considering that the Fatal cases are worst as the Injuries, but without taking out consideration the injuries, a Weighted calculation is made, where a weight of “5” is given to “Fatality” and a Weight of “1” to “Injury”</p>
+<pre class="r"><code>HarmfulEvents2 &lt;- HarmfulEvents
+HarmfulEvents2 &lt;- HarmfulEvents2 %&gt;% mutate(WeightedValue = FATALITIES*5 + INJURIES)
+HarmfulEvents2 &lt;- arrange(HarmfulEvents2, desc(WeightedValue))
+head(HarmfulEvents2, 5)</code></pre>
+<pre><code>##           EVTYPE FATALITIES INJURIES WeightedValue
+## 1        TORNADO       5633    91346        119511
+## 2 EXCESSIVE HEAT       1903     6525         16040
+## 3      TSTM WIND        504     6957          9477
+## 4      LIGHTNING        816     5230          9310
+## 5          FLOOD        470     6789          9139</code></pre>
+<p>With this conisderation, the most harmful event is the <strong>TORNADO</strong>, followed by the <strong>EXCESIVE HEAT</strong> To be clear with the “Weighted value”, this result might vary according to the weight given to the “FATALITY”. To validate its impact, another calculation with a higher weight is made to see if the top 3 events vary:</p>
+<pre class="r"><code>HarmfulEvents2 &lt;- HarmfulEvents
+HarmfulEvents2 &lt;- HarmfulEvents2 %&gt;% mutate(WeightedValue = FATALITIES*10 + INJURIES)
+HarmfulEvents2 &lt;- arrange(HarmfulEvents2, desc(WeightedValue))
+head(HarmfulEvents2, 3)</code></pre>
+<pre><code>##           EVTYPE FATALITIES INJURIES WeightedValue
+## 1        TORNADO       5633    91346        147676
+## 2 EXCESSIVE HEAT       1903     6525         25555
+## 3      LIGHTNING        816     5230         13390</code></pre>
+<div id="answer-question-1" class="section level3">
+<h3>Answer Question 1</h3>
+<ul>
+<li>It is clear that <strong>TORNADO</strong> and <strong>EXCESIVE HEAT</strong> are the 2 most harmful events in the USA.</li>
+</ul>
+</div>
 </div>
 </div>
 
