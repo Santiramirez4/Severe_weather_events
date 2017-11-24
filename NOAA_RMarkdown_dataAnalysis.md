@@ -349,7 +349,14 @@ For **Property** the biggest loosses are casued by **Floods**.
 For **Crop** the biggest losses are caused by **River Floods** 
 
 
+.
+.
 
+
+Complete project and information available in [GitHub Link](https://github.com/Santiramirez4/Severe_weather_events)
+
+.
+.
 
 
 End of Document - Santiago Ramirez G. 2017.

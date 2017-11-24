@@ -274,7 +274,7 @@ For **Crop** the biggest losses are caused by **River Floods**
 .
 
 
-Complete project and information available in [GitHub Link]("https://github.com/Santiramirez4/Severe_weather_events")
+Complete project and information available in [GitHub Link](https://github.com/Santiramirez4/Severe_weather_events)
 
 .
 .
