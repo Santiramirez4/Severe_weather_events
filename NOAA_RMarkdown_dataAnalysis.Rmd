@@ -40,13 +40,12 @@ Add here the Synopsis! **Pending**
 # for Reading Files *ZIP
 fileUrl <- "https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2"
 download.file(fileUrl, "dataset.zip")
-Rawdata <- read.csv("dataset.zip", header = TRUE, sep = ",", check.names = TRUE)
-
-#Check data
-str(Rawdata)
+Rawdata <- read.csv("dataset.zip", header = TRUE, sep = ",", check.names = TRUE, stringsAsFactors=FALSE)
 ``` 
 
-BGN_DATE represent a Date and is being shown as "Factor". TO convert to type: "Date"
+
+The variable **BGN_DATE** represent a Date and is being shown as "Factor". To convert to type: "Date"
+
 
 ``` {r changetodate}
 #Make a copy of data to avoid reading again the file
@@ -54,11 +53,19 @@ Rawdata2 <- Rawdata
 Rawdata2$BGN_DATE <- as.Date(Rawdata2$BGN_DATE, "%m/%d/%Y")
 #validate if type of data for "Date" has changed
 str(Rawdata2$BGN_DATE)
-
 ```
 
-One of the Questions is to know which Event Type has been more harmful with respect to
-population. 
+```{r changedatetype, include=FALSE}
+#Check data
+str(Rawdata2)
+```
+
+
+
+## First Question
+
+**The first Questions is to know which Event Type has been more harmful with respect to
+population.**
 
 The first approach is to validate wich Event Type has occurred more times
 
@@ -68,15 +75,17 @@ EventTypeSummary <- data.frame(EventTypeSummary)
 EventTypeSummary <- arrange(EventTypeSummary, desc(Freq))
 head(EventTypeSummary, 5)
 ``` 
-From this table, we can think that `r EventTypeSummary$Var1[[1]]` is the event that happens
+
+From this table, we can assure that **`r EventTypeSummary$Var1[[1]]`** is the event that happens
 the most in USA. Nevertheless, it does not guarantee that it is the most harmful for the 
 population.
 
-To validate the Harmfulness, the "Fatalities" and "Injuries" caused by the events will be
+To validate the Harmfulness, the **"Fatalities"** and **"Injuries"** caused by the events will be
 analyzed.
 
+
 ```{r fatalitiesInjuries}
-FatalitiesInjuries <- subset(Rawdata2, select =  c(STATE, BGN_DATE, EVTYPE, FATALITIES, INJURIES))
+FatalitiesInjuries <- subset(Rawdata2, select =  c(EVTYPE, FATALITIES, INJURIES))
 EvFatalities <- aggregate(FatalitiesInjuries$FATALITIES, by = list(FatalitiesInjuries$EVTYPE), FUN = sum)
 EvInjuries <- aggregate(FatalitiesInjuries$INJURIES, by = list(FatalitiesInjuries$EVTYPE), FUN = sum)
 #Order the Data from Higher to lower to see the events with more fatal and injure events:
@@ -94,7 +103,7 @@ Here, one can see that **TORNADO** and **EXCESSIVE HEAT** have the higher values
 Comparing with the frequency of the events (Table shown above "EventTypeSummary"), the 
 Frequency of the events is not directly related with the Harmfulness. 
 
-Considering that the Fatal cases are worst as the Injuries, but without taking out consideration
+Considering that the Fatal cases are worst as the Injuries, but without taking out of consideration
 the injuries, a Weighted calculation is made, where a weight of "5" is given to "Fatality"
 and a Weight of "1" to "Injury"
 
@@ -104,10 +113,14 @@ HarmfulEvents2 <- HarmfulEvents2 %>% mutate(WeightedValue = FATALITIES*5 + INJUR
 HarmfulEvents2 <- arrange(HarmfulEvents2, desc(WeightedValue))
 head(HarmfulEvents2, 5)
 ```
-With this conisderation, the most harmful event is the **TORNADO**, followed by the **EXCESIVE HEAT**
-To be clear with the "Weighted value", this result might vary according to the weight given
+
+With this conisderation, the most harmful event is the **TORNADO**, followed by the **EXCESIVE HEAT**.
+
+
+To be clear with the **"Weighted value"**, this result might vary according to the weight given
 to the "FATALITY". To validate its impact, another calculation with a higher weight is made to see
 if the top 3 events vary:
+
 
 ```{r weightedvalue2}
 HarmfulEvents2 <- HarmfulEvents
@@ -118,3 +131,105 @@ head(HarmfulEvents2, 3)
 
 ### Answer Question 1
 * It is clear that **TORNADO** and **EXCESIVE HEAT** are the 2 most harmful events in the USA.
+
+
+## Second Question
+
+**Identify which types of events have the greatest economic consequences**
+
+Identify which variables are related with Economic Consecuences:
+
+* **PROPDMG**   : Property Damage. Number of Property damaged
+* **PROPDMGEXP**: Property Damage Exponential. " ",-, ?, +, 0, 1, 2, 3, 4, 5, 6, 7, 8, B, h, H, K, m, M,
+* **CROPDMG**   : Crop Damage. Number of Crop damage
+* **CROPDMGEXP**: Crop Damage Exponential. ?,  0,  2,  B,  k,  K,  m,  M
+
+According to a validation made by _Soesilo Wijono_ in an article published in RPubs,
+[RPubs Link](https://rpubs.com/flyingdisc/PROPDMGEXP), the equivalents are as follows:
+
+* H,h = hundreds = 100
+
+* K,k = kilos = thousands = 1,000
+
+* M,m = millions = 1,000,000
+
+* B,b = billions = 1,000,000,000
+
+* (+) = 1
+
+* (-) = 0
+
+* (?) = 0
+
+* black/empty character = 0
+
+* numeric 0..8 = 10
+
+
+To avoid working with all complete data set, a new data set is created using only the 
+necessary variables
+
+```{r subset2question}
+EconomicVariables <- subset(Rawdata2, select =  c(EVTYPE, PROPDMG, PROPDMGEXP, CROPDMG, CROPDMGEXP))
+str(EconomicVariables)
+```
+
+
+Using the previous table, the equivalents values are assigned accordingly for __Property__
+
+```{r assingvaluestoEXPProp}
+EconomicVariables$PROPEXP[EconomicVariables$PROPDMGEXP == "H"] <- 100
+EconomicVariables$PROPEXP[EconomicVariables$PROPDMGEXP == "h"] <- 100
+EconomicVariables$PROPEXP[EconomicVariables$PROPDMGEXP == "K"] <- 1000
+EconomicVariables$PROPEXP[EconomicVariables$PROPDMGEXP == "k"] <- 1000
+EconomicVariables$PROPEXP[EconomicVariables$PROPDMGEXP == "M"] <- 1000000
+EconomicVariables$PROPEXP[EconomicVariables$PROPDMGEXP == "m"] <- 1000000
+EconomicVariables$PROPEXP[EconomicVariables$PROPDMGEXP == "B"] <- 1000000000
+EconomicVariables$PROPEXP[EconomicVariables$PROPDMGEXP == "b"] <- 1000000000
+EconomicVariables$PROPEXP[EconomicVariables$PROPDMGEXP == "+"] <- 1
+EconomicVariables$PROPEXP[EconomicVariables$PROPDMGEXP == "-"] <- 0
+EconomicVariables$PROPEXP[EconomicVariables$PROPDMGEXP == "?"] <- 0
+EconomicVariables$PROPEXP[EconomicVariables$PROPDMGEXP == " "] <- 0
+EconomicVariables$PROPEXP[EconomicVariables$PROPDMGEXP == ""] <- 0
+EconomicVariables$PROPEXP[EconomicVariables$PROPDMGEXP == "0"] <- 0
+EconomicVariables$PROPEXP[EconomicVariables$PROPDMGEXP == "1"] <- 0
+EconomicVariables$PROPEXP[EconomicVariables$PROPDMGEXP == "2"] <- 0
+EconomicVariables$PROPEXP[EconomicVariables$PROPDMGEXP == "3"] <- 0
+EconomicVariables$PROPEXP[EconomicVariables$PROPDMGEXP == "4"] <- 0
+EconomicVariables$PROPEXP[EconomicVariables$PROPDMGEXP == "5"] <- 0
+EconomicVariables$PROPEXP[EconomicVariables$PROPDMGEXP == "6"] <- 0
+EconomicVariables$PROPEXP[EconomicVariables$PROPDMGEXP == "7"] <- 0
+EconomicVariables$PROPEXP[EconomicVariables$PROPDMGEXP == "8"] <- 0
+```
+
+Using the previous table, the equivalents values are assigned accordingly for __Crop__
+
+```{r assignvaluestoEXPCrop}
+EconomicVariables$CROPEXP[EconomicVariables$CROPDMGEXP == ""] <- 0
+EconomicVariables$CROPEXP[EconomicVariables$CROPDMGEXP == "M"] <- 1000000
+EconomicVariables$CROPEXP[EconomicVariables$CROPDMGEXP == "K"] <- 1000
+EconomicVariables$CROPEXP[EconomicVariables$CROPDMGEXP == "m"] <- 1000000
+EconomicVariables$CROPEXP[EconomicVariables$CROPDMGEXP == "B"] <- 1000000000
+EconomicVariables$CROPEXP[EconomicVariables$CROPDMGEXP == "?"] <- 0
+EconomicVariables$CROPEXP[EconomicVariables$CROPDMGEXP == "0"] <- 0
+EconomicVariables$CROPEXP[EconomicVariables$CROPDMGEXP == "k"] <- 1000
+EconomicVariables$CROPEXP[EconomicVariables$CROPDMGEXP == "2"] <- 0
+```
+
+Having the equivalences for both _PROPERTY_ and _CROP_, we can calculate the final value
+
+```{r EconomicImpact}
+EconomicVariables$PROPValue <- EconomicVariables$PROPDMG * EconomicVariables$PROPEXP
+EconomicVariables$CROPValue <- EconomicVariables$CROPDMG * EconomicVariables$CROPEXP
+
+# To see the top 5 Types of events with most Property Damage
+head(arrange(EconomicVariables, desc(PROPValue)), 5)
+
+# To see the top 5 Types of events with most Crop Damage
+head(arrange(EconomicVariables, desc(CROPValue)), 5)
+```
+
+
+### Answer Question 2
+* In _Properties_, the biggest consecueces are due to **FLOOD** and for _Crops_ are due to
+**River Flood**.

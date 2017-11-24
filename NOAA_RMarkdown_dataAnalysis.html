@@ -143,56 +143,18 @@ $(document).ready(function () {
 <pre class="r"><code># for Reading Files *ZIP
 fileUrl &lt;- &quot;https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2&quot;
 download.file(fileUrl, &quot;dataset.zip&quot;)
-Rawdata &lt;- read.csv(&quot;dataset.zip&quot;, header = TRUE, sep = &quot;,&quot;, check.names = TRUE)
-
-#Check data
-str(Rawdata)</code></pre>
-<pre><code>## 'data.frame':    902297 obs. of  37 variables:
-##  $ STATE__   : num  1 1 1 1 1 1 1 1 1 1 ...
-##  $ BGN_DATE  : Factor w/ 16335 levels &quot;1/1/1966 0:00:00&quot;,..: 6523 6523 4242 11116 2224 2224 2260 383 3980 3980 ...
-##  $ BGN_TIME  : Factor w/ 3608 levels &quot;00:00:00 AM&quot;,..: 272 287 2705 1683 2584 3186 242 1683 3186 3186 ...
-##  $ TIME_ZONE : Factor w/ 22 levels &quot;ADT&quot;,&quot;AKS&quot;,&quot;AST&quot;,..: 7 7 7 7 7 7 7 7 7 7 ...
-##  $ COUNTY    : num  97 3 57 89 43 77 9 123 125 57 ...
-##  $ COUNTYNAME: Factor w/ 29601 levels &quot;&quot;,&quot;5NM E OF MACKINAC BRIDGE TO PRESQUE ISLE LT MI&quot;,..: 13513 1873 4598 10592 4372 10094 1973 23873 24418 4598 ...
-##  $ STATE     : Factor w/ 72 levels &quot;AK&quot;,&quot;AL&quot;,&quot;AM&quot;,..: 2 2 2 2 2 2 2 2 2 2 ...
-##  $ EVTYPE    : Factor w/ 985 levels &quot;   HIGH SURF ADVISORY&quot;,..: 834 834 834 834 834 834 834 834 834 834 ...
-##  $ BGN_RANGE : num  0 0 0 0 0 0 0 0 0 0 ...
-##  $ BGN_AZI   : Factor w/ 35 levels &quot;&quot;,&quot;  N&quot;,&quot; NW&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ BGN_LOCATI: Factor w/ 54429 levels &quot;&quot;,&quot;- 1 N Albion&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ END_DATE  : Factor w/ 6663 levels &quot;&quot;,&quot;1/1/1993 0:00:00&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ END_TIME  : Factor w/ 3647 levels &quot;&quot;,&quot; 0900CST&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ COUNTY_END: num  0 0 0 0 0 0 0 0 0 0 ...
-##  $ COUNTYENDN: logi  NA NA NA NA NA NA ...
-##  $ END_RANGE : num  0 0 0 0 0 0 0 0 0 0 ...
-##  $ END_AZI   : Factor w/ 24 levels &quot;&quot;,&quot;E&quot;,&quot;ENE&quot;,&quot;ESE&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ END_LOCATI: Factor w/ 34506 levels &quot;&quot;,&quot;- .5 NNW&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ LENGTH    : num  14 2 0.1 0 0 1.5 1.5 0 3.3 2.3 ...
-##  $ WIDTH     : num  100 150 123 100 150 177 33 33 100 100 ...
-##  $ F         : int  3 2 2 2 2 2 2 1 3 3 ...
-##  $ MAG       : num  0 0 0 0 0 0 0 0 0 0 ...
-##  $ FATALITIES: num  0 0 0 0 0 0 0 0 1 0 ...
-##  $ INJURIES  : num  15 0 2 2 2 6 1 0 14 0 ...
-##  $ PROPDMG   : num  25 2.5 25 2.5 2.5 2.5 2.5 2.5 25 25 ...
-##  $ PROPDMGEXP: Factor w/ 19 levels &quot;&quot;,&quot;-&quot;,&quot;?&quot;,&quot;+&quot;,..: 17 17 17 17 17 17 17 17 17 17 ...
-##  $ CROPDMG   : num  0 0 0 0 0 0 0 0 0 0 ...
-##  $ CROPDMGEXP: Factor w/ 9 levels &quot;&quot;,&quot;?&quot;,&quot;0&quot;,&quot;2&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ WFO       : Factor w/ 542 levels &quot;&quot;,&quot; CI&quot;,&quot;$AC&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ STATEOFFIC: Factor w/ 250 levels &quot;&quot;,&quot;ALABAMA, Central&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ ZONENAMES : Factor w/ 25112 levels &quot;&quot;,&quot;                                                                                                               &quot;| __truncated__,..: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ LATITUDE  : num  3040 3042 3340 3458 3412 ...
-##  $ LONGITUDE : num  8812 8755 8742 8626 8642 ...
-##  $ LATITUDE_E: num  3051 0 0 0 0 ...
-##  $ LONGITUDE_: num  8806 0 0 0 0 ...
-##  $ REMARKS   : Factor w/ 436781 levels &quot;&quot;,&quot;-2 at Deer Park\n&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ REFNUM    : num  1 2 3 4 5 6 7 8 9 10 ...</code></pre>
-<p>BGN_DATE represent a Date and is being shown as “Factor”. TO convert to type: “Date”</p>
+Rawdata &lt;- read.csv(&quot;dataset.zip&quot;, header = TRUE, sep = &quot;,&quot;, check.names = TRUE, stringsAsFactors=FALSE)</code></pre>
+<p>The variable <strong>BGN_DATE</strong> represent a Date and is being shown as “Factor”. To convert to type: “Date”</p>
 <pre class="r"><code>#Make a copy of data to avoid reading again the file
 Rawdata2 &lt;- Rawdata
 Rawdata2$BGN_DATE &lt;- as.Date(Rawdata2$BGN_DATE, &quot;%m/%d/%Y&quot;)
 #validate if type of data for &quot;Date&quot; has changed
 str(Rawdata2$BGN_DATE)</code></pre>
 <pre><code>##  Date[1:902297], format: &quot;1950-04-18&quot; &quot;1950-04-18&quot; &quot;1951-02-20&quot; &quot;1951-06-08&quot; &quot;1951-11-15&quot; ...</code></pre>
-<p>One of the Questions is to know which Event Type has been more harmful with respect to population.</p>
+</div>
+<div id="first-question" class="section level2">
+<h2>First Question</h2>
+<p><strong>The first Questions is to know which Event Type has been more harmful with respect to population.</strong></p>
 <p>The first approach is to validate wich Event Type has occurred more times</p>
 <pre class="r"><code>EventTypeSummary &lt;- table(Rawdata2$EVTYPE)
 EventTypeSummary &lt;- data.frame(EventTypeSummary)
@@ -204,9 +166,9 @@ head(EventTypeSummary, 5)</code></pre>
 ## 3 THUNDERSTORM WIND  82563
 ## 4           TORNADO  60652
 ## 5       FLASH FLOOD  54277</code></pre>
-<p>From this table, we can think that HAIL is the event that happens the most in USA. Nevertheless, it does not guarantee that it is the most harmful for the population.</p>
-<p>To validate the Harmfulness, the “Fatalities” and “Injuries” caused by the events will be analyzed.</p>
-<pre class="r"><code>FatalitiesInjuries &lt;- subset(Rawdata2, select =  c(STATE, BGN_DATE, EVTYPE, FATALITIES, INJURIES))
+<p>From this table, we can assure that <strong>HAIL</strong> is the event that happens the most in USA. Nevertheless, it does not guarantee that it is the most harmful for the population.</p>
+<p>To validate the Harmfulness, the <strong>“Fatalities”</strong> and <strong>“Injuries”</strong> caused by the events will be analyzed.</p>
+<pre class="r"><code>FatalitiesInjuries &lt;- subset(Rawdata2, select =  c(EVTYPE, FATALITIES, INJURIES))
 EvFatalities &lt;- aggregate(FatalitiesInjuries$FATALITIES, by = list(FatalitiesInjuries$EVTYPE), FUN = sum)
 EvInjuries &lt;- aggregate(FatalitiesInjuries$INJURIES, by = list(FatalitiesInjuries$EVTYPE), FUN = sum)
 #Order the Data from Higher to lower to see the events with more fatal and injure events:
@@ -225,7 +187,7 @@ head(HarmfulEvents, 5)</code></pre>
 ## 4           HEAT        937     2100
 ## 5      LIGHTNING        816     5230</code></pre>
 <p>Here, one can see that <strong>TORNADO</strong> and <strong>EXCESSIVE HEAT</strong> have the higher values in Fatalities. Comparing with the frequency of the events (Table shown above “EventTypeSummary”), the Frequency of the events is not directly related with the Harmfulness.</p>
-<p>Considering that the Fatal cases are worst as the Injuries, but without taking out consideration the injuries, a Weighted calculation is made, where a weight of “5” is given to “Fatality” and a Weight of “1” to “Injury”</p>
+<p>Considering that the Fatal cases are worst as the Injuries, but without taking out of consideration the injuries, a Weighted calculation is made, where a weight of “5” is given to “Fatality” and a Weight of “1” to “Injury”</p>
 <pre class="r"><code>HarmfulEvents2 &lt;- HarmfulEvents
 HarmfulEvents2 &lt;- HarmfulEvents2 %&gt;% mutate(WeightedValue = FATALITIES*5 + INJURIES)
 HarmfulEvents2 &lt;- arrange(HarmfulEvents2, desc(WeightedValue))
@@ -236,7 +198,8 @@ head(HarmfulEvents2, 5)</code></pre>
 ## 3      TSTM WIND        504     6957          9477
 ## 4      LIGHTNING        816     5230          9310
 ## 5          FLOOD        470     6789          9139</code></pre>
-<p>With this conisderation, the most harmful event is the <strong>TORNADO</strong>, followed by the <strong>EXCESIVE HEAT</strong> To be clear with the “Weighted value”, this result might vary according to the weight given to the “FATALITY”. To validate its impact, another calculation with a higher weight is made to see if the top 3 events vary:</p>
+<p>With this conisderation, the most harmful event is the <strong>TORNADO</strong>, followed by the <strong>EXCESIVE HEAT</strong>.</p>
+<p>To be clear with the <strong>“Weighted value”</strong>, this result might vary according to the weight given to the “FATALITY”. To validate its impact, another calculation with a higher weight is made to see if the top 3 events vary:</p>
 <pre class="r"><code>HarmfulEvents2 &lt;- HarmfulEvents
 HarmfulEvents2 &lt;- HarmfulEvents2 %&gt;% mutate(WeightedValue = FATALITIES*10 + INJURIES)
 HarmfulEvents2 &lt;- arrange(HarmfulEvents2, desc(WeightedValue))
@@ -249,6 +212,109 @@ head(HarmfulEvents2, 3)</code></pre>
 <h3>Answer Question 1</h3>
 <ul>
 <li>It is clear that <strong>TORNADO</strong> and <strong>EXCESIVE HEAT</strong> are the 2 most harmful events in the USA.</li>
+</ul>
+</div>
+</div>
+<div id="second-question" class="section level2">
+<h2>Second Question</h2>
+<p><strong>Identify which types of events have the greatest economic consequences</strong></p>
+<p>Identify which variables are related with Economic Consecuences:</p>
+<ul>
+<li><strong>PROPDMG</strong> : Property Damage. Number of Property damaged</li>
+<li><strong>PROPDMGEXP</strong>: Property Damage Exponential. &quot; “,-, ?, +, 0, 1, 2, 3, 4, 5, 6, 7, 8, B, h, H, K, m, M,</li>
+<li><strong>CROPDMG</strong> : Crop Damage. Number of Crop damage</li>
+<li><strong>CROPDMGEXP</strong>: Crop Damage Exponential. ?, 0, 2, B, k, K, m, M</li>
+</ul>
+<p>According to a validation made by <em>Soesilo Wijono</em> in an article published in RPubs, <a href="https://rpubs.com/flyingdisc/PROPDMGEXP">RPubs Link</a>, the equivalents are as follows:</p>
+<ul>
+<li><p>H,h = hundreds = 100</p></li>
+<li><p>K,k = kilos = thousands = 1,000</p></li>
+<li><p>M,m = millions = 1,000,000</p></li>
+<li><p>B,b = billions = 1,000,000,000</p></li>
+<li><p>(+) = 1</p></li>
+<li><p>(-) = 0</p></li>
+<li><p>(?) = 0</p></li>
+<li><p>black/empty character = 0</p></li>
+<li><p>numeric 0..8 = 10</p></li>
+</ul>
+<p>To avoid working with all complete data set, a new data set is created using only the necessary variables</p>
+<pre class="r"><code>EconomicVariables &lt;- subset(Rawdata2, select =  c(EVTYPE, PROPDMG, PROPDMGEXP, CROPDMG, CROPDMGEXP))
+str(EconomicVariables)</code></pre>
+<pre><code>## 'data.frame':    902297 obs. of  5 variables:
+##  $ EVTYPE    : chr  &quot;TORNADO&quot; &quot;TORNADO&quot; &quot;TORNADO&quot; &quot;TORNADO&quot; ...
+##  $ PROPDMG   : num  25 2.5 25 2.5 2.5 2.5 2.5 2.5 25 25 ...
+##  $ PROPDMGEXP: chr  &quot;K&quot; &quot;K&quot; &quot;K&quot; &quot;K&quot; ...
+##  $ CROPDMG   : num  0 0 0 0 0 0 0 0 0 0 ...
+##  $ CROPDMGEXP: chr  &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; ...</code></pre>
+<p>Using the previous table, the equivalents values are assigned accordingly for <strong>Property</strong></p>
+<pre class="r"><code>EconomicVariables$PROPEXP[EconomicVariables$PROPDMGEXP == &quot;H&quot;] &lt;- 100
+EconomicVariables$PROPEXP[EconomicVariables$PROPDMGEXP == &quot;h&quot;] &lt;- 100
+EconomicVariables$PROPEXP[EconomicVariables$PROPDMGEXP == &quot;K&quot;] &lt;- 1000
+EconomicVariables$PROPEXP[EconomicVariables$PROPDMGEXP == &quot;k&quot;] &lt;- 1000
+EconomicVariables$PROPEXP[EconomicVariables$PROPDMGEXP == &quot;M&quot;] &lt;- 1000000
+EconomicVariables$PROPEXP[EconomicVariables$PROPDMGEXP == &quot;m&quot;] &lt;- 1000000
+EconomicVariables$PROPEXP[EconomicVariables$PROPDMGEXP == &quot;B&quot;] &lt;- 1000000000
+EconomicVariables$PROPEXP[EconomicVariables$PROPDMGEXP == &quot;b&quot;] &lt;- 1000000000
+EconomicVariables$PROPEXP[EconomicVariables$PROPDMGEXP == &quot;+&quot;] &lt;- 1
+EconomicVariables$PROPEXP[EconomicVariables$PROPDMGEXP == &quot;-&quot;] &lt;- 0
+EconomicVariables$PROPEXP[EconomicVariables$PROPDMGEXP == &quot;?&quot;] &lt;- 0
+EconomicVariables$PROPEXP[EconomicVariables$PROPDMGEXP == &quot; &quot;] &lt;- 0
+EconomicVariables$PROPEXP[EconomicVariables$PROPDMGEXP == &quot;&quot;] &lt;- 0
+EconomicVariables$PROPEXP[EconomicVariables$PROPDMGEXP == &quot;0&quot;] &lt;- 0
+EconomicVariables$PROPEXP[EconomicVariables$PROPDMGEXP == &quot;1&quot;] &lt;- 0
+EconomicVariables$PROPEXP[EconomicVariables$PROPDMGEXP == &quot;2&quot;] &lt;- 0
+EconomicVariables$PROPEXP[EconomicVariables$PROPDMGEXP == &quot;3&quot;] &lt;- 0
+EconomicVariables$PROPEXP[EconomicVariables$PROPDMGEXP == &quot;4&quot;] &lt;- 0
+EconomicVariables$PROPEXP[EconomicVariables$PROPDMGEXP == &quot;5&quot;] &lt;- 0
+EconomicVariables$PROPEXP[EconomicVariables$PROPDMGEXP == &quot;6&quot;] &lt;- 0
+EconomicVariables$PROPEXP[EconomicVariables$PROPDMGEXP == &quot;7&quot;] &lt;- 0
+EconomicVariables$PROPEXP[EconomicVariables$PROPDMGEXP == &quot;8&quot;] &lt;- 0</code></pre>
+<p>Using the previous table, the equivalents values are assigned accordingly for <strong>Crop</strong></p>
+<pre class="r"><code>EconomicVariables$CROPEXP[EconomicVariables$CROPDMGEXP == &quot;&quot;] &lt;- 0
+EconomicVariables$CROPEXP[EconomicVariables$CROPDMGEXP == &quot;M&quot;] &lt;- 1000000
+EconomicVariables$CROPEXP[EconomicVariables$CROPDMGEXP == &quot;K&quot;] &lt;- 1000
+EconomicVariables$CROPEXP[EconomicVariables$CROPDMGEXP == &quot;m&quot;] &lt;- 1000000
+EconomicVariables$CROPEXP[EconomicVariables$CROPDMGEXP == &quot;B&quot;] &lt;- 1000000000
+EconomicVariables$CROPEXP[EconomicVariables$CROPDMGEXP == &quot;?&quot;] &lt;- 0
+EconomicVariables$CROPEXP[EconomicVariables$CROPDMGEXP == &quot;0&quot;] &lt;- 0
+EconomicVariables$CROPEXP[EconomicVariables$CROPDMGEXP == &quot;k&quot;] &lt;- 1000
+EconomicVariables$CROPEXP[EconomicVariables$CROPDMGEXP == &quot;2&quot;] &lt;- 0</code></pre>
+<p>Having the equivalences for both <em>PROPERTY</em> and <em>CROP</em>, we can calculate the final value</p>
+<pre class="r"><code>EconomicVariables$PROPValue &lt;- EconomicVariables$PROPDMG * EconomicVariables$PROPEXP
+EconomicVariables$CROPValue &lt;- EconomicVariables$CROPDMG * EconomicVariables$CROPEXP
+
+# To see the top 5 Types of events with most Property Damage
+head(arrange(EconomicVariables, desc(PROPValue)), 5)</code></pre>
+<pre><code>##              EVTYPE PROPDMG PROPDMGEXP CROPDMG CROPDMGEXP PROPEXP CROPEXP
+## 1             FLOOD  115.00          B    32.5          M   1e+09   1e+06
+## 2       STORM SURGE   31.30          B     0.0              1e+09   0e+00
+## 3 HURRICANE/TYPHOON   16.93          B     0.0              1e+09   0e+00
+## 4       STORM SURGE   11.26          B     0.0              1e+09   0e+00
+## 5 HURRICANE/TYPHOON   10.00          B     0.0              1e+09   0e+00
+##   PROPValue CROPValue
+## 1 1.150e+11  32500000
+## 2 3.130e+10         0
+## 3 1.693e+10         0
+## 4 1.126e+10         0
+## 5 1.000e+10         0</code></pre>
+<pre class="r"><code># To see the top 5 Types of events with most Crop Damage
+head(arrange(EconomicVariables, desc(CROPValue)), 5)</code></pre>
+<pre><code>##              EVTYPE PROPDMG PROPDMGEXP CROPDMG CROPDMGEXP PROPEXP CROPEXP
+## 1       RIVER FLOOD    5.00          B    5.00          B   1e+09   1e+09
+## 2         ICE STORM  500.00          K    5.00          B   1e+03   1e+09
+## 3 HURRICANE/TYPHOON    5.88          B    1.51          B   1e+09   1e+09
+## 4           DROUGHT    0.00               1.00          B   0e+00   1e+09
+## 5      EXTREME COLD    0.00             596.00          M   0e+00   1e+06
+##   PROPValue CROPValue
+## 1  5.00e+09  5.00e+09
+## 2  5.00e+05  5.00e+09
+## 3  5.88e+09  1.51e+09
+## 4  0.00e+00  1.00e+09
+## 5  0.00e+00  5.96e+08</code></pre>
+<div id="answer-question-2" class="section level3">
+<h3>Answer Question 2</h3>
+<ul>
+<li>In <em>Properties</em>, the biggest consecueces are due to <strong>FLOOD</strong> and for <em>Crops</em> are due to <strong>River Flood</strong>.</li>
 </ul>
 </div>
 </div>
