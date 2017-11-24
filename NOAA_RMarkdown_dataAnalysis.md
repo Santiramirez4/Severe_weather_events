@@ -2,6 +2,15 @@
 Santiago R  
 21 November 2017  
 
+# Synopsis
+
+Analyse the impact that different type of Climate events have in the health and economics
+in the USA. Data from NOAA storm data base is used for the analysis. 
+
+For the Health analysis, the objective is to identify which events are the most harmful. 
+For the economical impact, validate which climate events have caused the most expensive
+losses in Properties and in Crops.
+
 
 
 # Questions:
@@ -15,9 +24,7 @@ most harmful with respect to population health?
 
 - Across the United States, which types of events have the greatest economic consequences?
 
-# Synopsis
 
-Add here the Synopsis! **Pending**
 
 # Data processing
 
@@ -205,11 +212,11 @@ str(EconomicVariables)
 
 ```
 ## 'data.frame':	902297 obs. of  5 variables:
-##  $ EVTYPE    : chr  "TORNADO" "TORNADO" "TORNADO" "TORNADO" ...
+##  $ EVTYPE    : Factor w/ 985 levels "   HIGH SURF ADVISORY",..: 834 834 834 834 834 834 834 834 834 834 ...
 ##  $ PROPDMG   : num  25 2.5 25 2.5 2.5 2.5 2.5 2.5 25 25 ...
-##  $ PROPDMGEXP: chr  "K" "K" "K" "K" ...
+##  $ PROPDMGEXP: Factor w/ 19 levels "","-","?","+",..: 17 17 17 17 17 17 17 17 17 17 ...
 ##  $ CROPDMG   : num  0 0 0 0 0 0 0 0 0 0 ...
-##  $ CROPDMGEXP: chr  "" "" "" "" ...
+##  $ CROPDMGEXP: Factor w/ 9 levels "","?","0","2",..: 1 1 1 1 1 1 1 1 1 1 ...
 ```
 
 
@@ -264,45 +271,85 @@ EconomicVariables$PROPValue <- EconomicVariables$PROPDMG * EconomicVariables$PRO
 EconomicVariables$CROPValue <- EconomicVariables$CROPDMG * EconomicVariables$CROPEXP
 
 # To see the top 5 Types of events with most Property Damage
-head(arrange(EconomicVariables, desc(PROPValue)), 5)
+top10Prop <- arrange(EconomicVariables, desc(PROPValue))[1:10, ]
+head(top10Prop, 5)
 ```
 
 ```
-##              EVTYPE PROPDMG PROPDMGEXP CROPDMG CROPDMGEXP PROPEXP CROPEXP
-## 1             FLOOD  115.00          B    32.5          M   1e+09   1e+06
-## 2       STORM SURGE   31.30          B     0.0              1e+09   0e+00
-## 3 HURRICANE/TYPHOON   16.93          B     0.0              1e+09   0e+00
-## 4       STORM SURGE   11.26          B     0.0              1e+09   0e+00
-## 5 HURRICANE/TYPHOON   10.00          B     0.0              1e+09   0e+00
-##   PROPValue CROPValue
-## 1 1.150e+11  32500000
-## 2 3.130e+10         0
-## 3 1.693e+10         0
-## 4 1.126e+10         0
-## 5 1.000e+10         0
+##   STATE   BGN_DATE            EVTYPE PROPDMG PROPDMGEXP CROPDMG CROPDMGEXP
+## 1    CA 2006-01-01             FLOOD  115.00          B    32.5          M
+## 2    LA 2005-08-29       STORM SURGE   31.30          B     0.0           
+## 3    LA 2005-08-28 HURRICANE/TYPHOON   16.93          B     0.0           
+## 4    MS 2005-08-29       STORM SURGE   11.26          B     0.0           
+## 5    FL 2005-10-24 HURRICANE/TYPHOON   10.00          B     0.0           
+##   PROPEXP CROPEXP PROPValue CROPValue
+## 1   1e+09   1e+06 1.150e+11  32500000
+## 2   1e+09   0e+00 3.130e+10         0
+## 3   1e+09   0e+00 1.693e+10         0
+## 4   1e+09   0e+00 1.126e+10         0
+## 5   1e+09   0e+00 1.000e+10         0
 ```
 
 ```r
 # To see the top 5 Types of events with most Crop Damage
-head(arrange(EconomicVariables, desc(CROPValue)), 5)
+top10crop <- arrange(EconomicVariables, desc(CROPValue))[1:10, ]
+head(top10crop, 5)
 ```
 
 ```
-##              EVTYPE PROPDMG PROPDMGEXP CROPDMG CROPDMGEXP PROPEXP CROPEXP
-## 1       RIVER FLOOD    5.00          B    5.00          B   1e+09   1e+09
-## 2         ICE STORM  500.00          K    5.00          B   1e+03   1e+09
-## 3 HURRICANE/TYPHOON    5.88          B    1.51          B   1e+09   1e+09
-## 4           DROUGHT    0.00               1.00          B   0e+00   1e+09
-## 5      EXTREME COLD    0.00             596.00          M   0e+00   1e+06
-##   PROPValue CROPValue
-## 1  5.00e+09  5.00e+09
-## 2  5.00e+05  5.00e+09
-## 3  5.88e+09  1.51e+09
-## 4  0.00e+00  1.00e+09
-## 5  0.00e+00  5.96e+08
+##   STATE   BGN_DATE            EVTYPE PROPDMG PROPDMGEXP CROPDMG CROPDMGEXP
+## 1    IL 1993-08-31       RIVER FLOOD    5.00          B    5.00          B
+## 2    MS 1994-02-09         ICE STORM  500.00          K    5.00          B
+## 3    MS 2005-08-29 HURRICANE/TYPHOON    5.88          B    1.51          B
+## 4    TX 2006-01-01           DROUGHT    0.00               1.00          B
+## 5    CA 1998-12-20      EXTREME COLD    0.00             596.00          M
+##   PROPEXP CROPEXP PROPValue CROPValue
+## 1   1e+09   1e+09  5.00e+09  5.00e+09
+## 2   1e+03   1e+09  5.00e+05  5.00e+09
+## 3   1e+09   1e+09  5.88e+09  1.51e+09
+## 4   0e+00   1e+09  0.00e+00  1.00e+09
+## 5   0e+00   1e+06  0.00e+00  5.96e+08
 ```
 
 
 ### Answer Question 2
 * In _Properties_, the biggest consecueces are due to **FLOOD** and for _Crops_ are due to
 **River Flood**.
+
+
+# Results
+
+## Question 1
+
+
+```r
+par(mfrow = c(1,3), mar = c(12,3,2,2), mgp = c(3,1,0), cex = 0.7)
+barplot(HarmfulEvents2$FATALITIES[1:10], las = 3, names.arg = HarmfulEvents2$EVTYPE[1:10], main = "Top 10 Wheater Fatalities", ylab = "# fatalities", col = "yellow")
+barplot(HarmfulEvents2$INJURIES[1:10], las = 3, names.arg = HarmfulEvents2$EVTYPE[1:10], main = "Top 10 Wheater Injuries", ylab = "# Injuries", col = "blue")
+barplot(HarmfulEvents2$WeightedValue[1:10], las = 3, names.arg = HarmfulEvents2$EVTYPE[1:10], main = "Top 10 Harm Events - Weighted", ylab = "# Harm - Weighted", col = "red")
+```
+
+![](NOAA_RMarkdown_dataAnalysis_files/figure-html/results1-1.png)<!-- -->
+
+**Tornado** is the event that causes more harm in USA, Followed by **Excessive Heat**. 
+The third graph is a weighted representation of the events that causes more harm,
+considering fatality events worse than injuries (Weighted calculation).
+
+## Question 2
+
+```r
+par(mfrow = c(1,2), mar = c(12,3,2,2), mgp = c(3,1,0), cex = 0.7)
+barplot(top10Prop$PROPValue, las = 3, names.arg = top10Prop$EVTYPE, main = "Top 10 Property Damage", ylab = "$ Property loss", col = "cyan")
+barplot(top10crop$CROPValue, las = 3, names.arg = top10crop$EVTYPE, main = "Top 10 Crop Damage", ylab = "$ Crop loss", col = "green")
+```
+
+![](NOAA_RMarkdown_dataAnalysis_files/figure-html/results2-1.png)<!-- -->
+
+For **Property** the biggest loosses are casued by **Floods**.
+For **Crop** the biggest losses are caused by **River Floods** 
+
+
+
+
+
+End of Document - Santiago Ramirez G. 2017.
